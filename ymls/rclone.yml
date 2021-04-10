@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+# Title:      Docker Uploader 
+# Author(s):  PhyskX
+# CoAuthot:   MrDoob
+# GNU:        General Public License v3.0
+################################################################################
+---
+- name: 'Check of Existance files in {{ pgrole }}'
+  stat:
+    path: '/opt/appdata/{{pgrole}}/rclone.conf'
+  register: rcp
+
+- name: 'Clone rclone.config to {{ pgrole }} folder' 
+  copy:
+    src: /opt/appdata/plexguide/rclone.conf
+    dest: /opt/appdata/{{pgrole}}/rclone.conf
+    owner: '1000'
+    group: '1000'
+    mode: '0755'
+  when: rcp.stat.exists == false
+
+- name: 'Creating appdata folder if it does not exist.'
+  shell: 'mkdir -p /opt/appdata/{{pgrole}}'
+
+- name: 'Creating rclone cache folder'
+  shell: 'mkdir -p /mnt/rclone_cache'
+
+- name: 'Setting ownership on appdata recursivley (this can take a while!)'
+  shell: 'chown -cR 1000:1000 /opt/appdata/{{pgrole}}'
+
+- name: 'Setting permissions on appdata recursivley (this can take a while!)'
+  shell: 'chmod -cR 775 /opt/appdata/{{pgrole}}'
+
+- name: 'Setting ownership on rclone_cache recursivley (this can take a while!)'
+  shell: 'chown -cR 1000:1000 /mnt/rclone_cache'
+
+- name: 'Setting permissions on rclone_cache (this can take a while!)'
+  shell: 'chmod -cR 775 /mnt/rclone_cache/'

@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Title:      PGBlitz (Reference Title File)
+# Authors:    Admin9705, Deiteq, and many PGBlitz Contributors
+# URL:        https://pgblitz.com - http://github.pgblitz.com
+# GNU:        General Public License v3.0
+################################################################################
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Register HD Path
+      shell: 'cat /var/plexguide/server.hd.path'
+      register: hdpath
+
+    - name: Creating required paths
+      file: 'path={{hdpath.stdout}}/{{item}} state=directory mode=0755 owner=1000 group=1000 recurse=true'
+      with_items:
+        - 'downloads'
+        - 'incomplete'
+
+    - name: 'Setting ownership on logs'
+      shell: 'chown -R 1000:1000 /var/plexguide/logs'
+
+    - name: 'Setting ownership'
+      shell: 'chown -R 1000:1000 {{hdpath.stdout}}/{{item}}'
+      with_items:
+        - 'downloads'
+        - 'incomplete'
+
+    - name: 'Setting permissions'
+      shell: 'chmod -R 755 {{hdpath.stdout}}/{{item}}'
+      with_items:
+        - 'downloads'
+        - 'incomplete'
+
+    - name: Transport Type
+      shell: 'echo "" >> /opt/appdata/plexguide/rclone.conf'
+
+    - name: Transport Type
+      shell: 'sed -i -e "/\[(unionfs|pgunion)\]/,+2d" /opt/appdata/plexguide/rclone.conf'

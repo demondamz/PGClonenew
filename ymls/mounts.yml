@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# Title:      Docker Mount
+# Authot:     MrDoob
+# GNU:        General Public License v3.0
+################################################################################
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    # FACTS #######################################################################
+    - name: 'Set Known Facts'
+      set_fact:
+        pgrole: 'mount'
+        intport: '8080'
+        extport: '7755'
+        image: 'demondamz/mount:latest'
+
+    - name: 'Remove mount Container'
+      docker_container:
+        name: 'mount'
+        state: 'absent'
+
+    # CORE (MANDATORY) ############################################################
+    - name: 'Including main job'
+      include_tasks: '/opt/coreapps/apps/_core.yml'
+    - name: 'Including rclone job'
+      include_tasks: './rclone.yml'
+    - name: 'Register Download Drive'
+      shell: 'cat /var/plexguide/server.hd.path'
+      register: downloadpath
+
+    - name: 'Setting {{pgrole}} ENV'
+      set_fact:
+        pg_env:
+          PUID: '1000'
+          PGID: '1000'
+     ########## DEPLOYMENT ##########
+    - name: 'Deploying {{pgrole}}'
+      docker_container:
+        name: '{{pgrole}}'
+        hostname: '{{pgrole}}'
+        image: '{{image}}'
+        pull: yes
+        published_ports:
+          - '{{extport}}:{{intport}}'
+        volumes:
+          - '/opt/appdata/{{pgrole}}/:/config'
+          - '/mnt:/mnt:shared'
+          - '/var/run/docker.sock:/var/run/docker.sock'
+        env: '{{pg_env}}'
+        capabilities:
+          - 'SYS_ADMIN'
+        devices:
+          - '/dev/fuse'
+        privileged: true
+        restart_policy: unless-stopped
+        security_opts:
+          - apparmor:unconfined
+        networks:
+          - name: plexguide
+            aliases:
+              - '{{pgrole}}'
+        dns_servers:
+          - '8.8.8.8'
+          - '8.8.4.4'
+        state: started
