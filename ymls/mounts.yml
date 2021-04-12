@@ -14,7 +14,7 @@
         pgrole: 'mount'
         intport: '8080'
         extport: '7755'
-        image: 'demondamz/mount:latest'
+        image: 'ghcr.io/doob187/mountv2:latest'
 
     - name: 'Remove mount Container'
       docker_container:
