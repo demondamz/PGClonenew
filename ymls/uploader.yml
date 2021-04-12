@@ -15,7 +15,7 @@
         pgrole: 'uploader'
         intport: '8080'
         extport: '7777'
-        image: 'demondamz/uploader:latest'
+        image: 'ghcr.io/doob187/uploaderv2:latest'
 
     - name: 'Remove uploader Container'
       docker_container:
