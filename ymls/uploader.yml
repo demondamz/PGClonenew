@@ -59,6 +59,7 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
+          com.ouroboros.enable: 'false'
 
      ########## DEPLOYMENT ##########
     - name: 'Deploying {{pgrole}}'
