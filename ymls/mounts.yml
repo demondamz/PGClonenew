@@ -24,8 +24,8 @@
     # CORE (MANDATORY) ############################################################
     - name: 'Including main job'
       include_tasks: '/opt/coreapps/apps/_core.yml'
-    - name: 'Including rclone job'
-      include_tasks: './rclone.yml'
+    - name: 'Including key and rclone job'
+      include_tasks: './key.yml'
     - name: 'Register Download Drive'
       shell: 'cat /var/plexguide/server.hd.path'
       register: downloadpath
