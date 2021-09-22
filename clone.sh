@@ -42,7 +42,7 @@ sleep 2
 updateall
 uppercut
 gcloudup
-rclone
+#rclone
 clone
 }
 function updateall() {
