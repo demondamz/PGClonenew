@@ -42,7 +42,7 @@ sleep 2
 updateall
 uppercut
 gcloudup
-rclone
+#rclone
 clone
 }
 function updateall() {
@@ -78,14 +78,14 @@ fi
 }
 
 function rclone() {
-  curl -fsSL https://raw.githubusercontent.com/demondamz/RCupdate/master/rcupdate.sh | sudo bash
+  curl -fsSL https://raw.githubusercontent.com/hawkinzzz/RCupdate/master/rcupdate.sh | sudo bash
 }
 
 function clone() {
     sudo rm -rf /opt/pgclone
     curl -fsSL https://raw.githubusercontent.com/MatchbookLab/local-persist/master/scripts/install.sh | sudo bash
     sudo docker volume create -d local-persist -o mountpoint=/mnt --name=unionfs 
-    sudo git clone --quiet https://github.com/demondamz/PGClonenew.git /opt/pgclone
+    sudo git clone --quiet https://github.com/hawkinzzz/PGClonenew.git /opt/pgclone
     rm -rf /opt/plexguide/menu/pgclone/pgclone.sh 
     mv /opt/pgclone/newpgclone.sh /opt/plexguide/menu/pgcloner/pgclone.sh
     sudo chown -cR 1000:1000 /opt/pgclone/ 1>/dev/null 2>&1
